@@ -1,73 +1,64 @@
-# Lab_Eng_Software
-
-Projeto da disciplina de Engenharia de Software com o professor Lozano
-
-Enzo Ponte Gamberi - RA: 10389931
-Thiago Ruiz Fernandes Silva – RA: 10426057
-João Guilherme Messias de Oliveira Santos – RA: 10426110
-
 # Sistema de Doação de Alimentos
 
-## 📌 Sobre o Projeto
+Projeto desenvolvido para a disciplina de **Laboratório de Engenharia de Software** da Universidade Presbiteriana Mackenzie, sob a orientação do **Prof. Msc. Luiz Carlos Machi Lozano**.
 
-O Sistema de Doação de Alimentos é uma plataforma criada para facilitar a conexão entre doadores de alimentos e instituições ou pessoas que necessitam de apoio alimentar.
+### Equipe Desenvolvedora
+* **Enzo Ponte Gamberi** - RA: 10389931
+* **João Guilherme Messias de Oliveira Santos** - RA: 10426110
+* **Thiago Ruiz Fernandes Silva** - RA: 10426057
 
-O objetivo principal do projeto é reduzir o desperdício de alimentos e ajudar comunidades em situação de vulnerabilidade social por meio da tecnologia, organizando e simplificando o processo de doação.
+---
 
-## 🎯 Objetivo
+## Sobre o Projeto
+O **Sistema de Doação de Alimentos** é uma plataforma digital web com forte caráter extensionista. O cenário atual brasileiro apresenta um paradoxo crítico: altos índices de desperdício de alimentos viáveis para consumo por parte do setor de comércio, em contraste com a insegurança alimentar enfrentada por parcelas vulneráveis da população. 
 
-Criar uma plataforma simples e acessível onde:
+A nossa solução atua como uma ponte tecnológica, estabelecendo uma rede de comunicação eficiente e rastreável entre quem deseja doar (pessoas físicas, padarias, mercados) e quem precisa receber (ONGs, abrigos e instituições sociais).
 
-- Doadores possam cadastrar alimentos disponíveis para doação
-- Instituições ou pessoas possam visualizar e solicitar essas doações
-- O processo de doação seja organizado e transparente
+## Principais Funcionalidades
 
-Assim, alimentos que seriam descartados podem ser redirecionados para quem realmente precisa.
+O sistema opera com base em dois perfis principais de usuários:
 
-## ⚙️ Como o Sistema Funcionará
+### Para Doadores:
+* **Cadastro Rápido de Alimentos:** Inserção de itens informando nome, quantidade, data de validade e categoria (perecível, não-perecível, etc).
+* **Gestão de Status:** Acompanhamento do ciclo de vida da doação (Disponível ➔ Reservado ➔ Entregue).
 
-O sistema permitirá dois tipos de usuários:
+### Para Instituições (Receptores):
+* **Feed Dinâmico:** Visualização em tempo real de todas as doações disponíveis na plataforma.
+* **Filtro Inteligente:** Busca otimizada por categorias específicas de alimentos.
+* **Sistema de Reserva:** Garantia transacional de que um alimento reservado seja bloqueado para outras instituições, viabilizando a logística de retirada.
 
-### 👤 Doadores
-Poderão cadastrar alimentos informando:
+---
 
-- Tipo de alimento
-- Quantidade
-- Data de validade
-- Localização
+## Stack Tecnológica e Arquitetura
 
-### 🏠 Instituições / Receptores
+O projeto adota a arquitetura **Client-Server**, separando a interface do usuário da API de negócios para garantir escalabilidade e facilitar a implantação na nuvem.
 
-Poderão:
+**Frontend (Interface Web)**
+* HTML5 & CSS3
+* JavaScript (Vanilla)
+* Bootstrap (Estilização responsiva)
 
-- Visualizar alimentos disponíveis
-- Solicitar doações
-- Organizar a retirada dos alimentos
+**Backend (API RESTful)**
+* Python 
+* Microframework (Flask / FastAPI)
 
-## 🌍 Impacto Social
+**Banco de Dados**
+* SQLite (Ambiente de Desenvolvimento)
+* PostgreSQL (Ambiente de Produção)
 
-O projeto busca combater dois grandes problemas sociais:
+**DevOps & Cloud**
+* **Controle de Versão:** Git & GitHub
+* **CI/CD:** GitHub Actions (Esteira automatizada de testes e entrega)
+* **Hospedagem:** Amazon Web Services - AWS (EC2 para aplicação e RDS para o banco de dados)
 
-- Desperdício de alimentos
-- Insegurança alimentar
+---
 
-Ao conectar quem possui alimentos disponíveis com quem precisa, o sistema contribui para uma distribuição mais eficiente dos recursos alimentares.
+## Estrutura do Repositório
 
-## 🎓 Caráter Extensionista
+* `/Diagramas`: Contém os diagramas UML (Casos de Uso, Domínio e Sequência) que modelam as regras de negócio do sistema.
+* `Documentação.pdf`: Documento formal detalhando requisitos, wireframes e arquitetura da Fase N1.
+* *(As pastas contendo o código fonte do Front-end e Back-end serão adicionadas nas próximas iterações do ciclo de desenvolvimento).*
 
-Este projeto possui caráter extensionista pois utiliza o conhecimento tecnológico adquirido na universidade para desenvolver uma solução que gera impacto direto na comunidade.
-
-A proposta é aplicar a tecnologia para resolver um problema real da sociedade, incentivando práticas solidárias e contribuindo para o bem-estar social.
-
-## 🛠️ Tecnologias Utilizadas
-
-O projeto poderá utilizar tecnologias como:
-
-- Frontend: HTML, CSS e JavaScript
-- Backend: Node.js ou Python
-- Banco de dados: MySQL ou PostgreSQL
-- Controle de versão: Git e GitHub
-
-## 🚀 Status do Projeto
-
-Em desenvolvimento.
+## Status do Projeto
+✅ **Fase 1 (N1):** Definição do produto, Engenharia de Requisitos, Wireframes e Modelagem UML. *(Concluído)*  
+⏳ **Fase 2 (N2):** Desenvolvimento da API, Front-end, CI/CD e Implantação na AWS. *(Em andamento)*
