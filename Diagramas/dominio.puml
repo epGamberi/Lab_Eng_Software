@@ -1,0 +1,22 @@
+@startuml Diagrama de Dominio
+class Usuario {
+  + id_usuario: integer
+  + nome: string
+  + email: string
+  + senha_hash: string
+  + tipo_perfil: enum (Doador, Instituicao)
+  + endereco: string
+}
+
+class Doacao {
+  + id_doacao: integer
+  + titulo: string
+  + quantidade: string
+  + validade: date
+  + categoria: string
+  + status: enum (Disponivel, Reservado, Entregue)
+}
+
+Usuario "1" -- "0..*" Doacao : anuncia (Doador) >
+Usuario "0..1" -- "0..*" Doacao : reserva (Instituicao) >
+@enduml
