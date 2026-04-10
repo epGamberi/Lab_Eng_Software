@@ -3,8 +3,8 @@ from doacao import Doacao
 
 class TestDoacao(unittest.TestCase):
 
-    def setUp(self):
-        # Isso roda antes de cada teste para criar um objeto limpo
+    # Roda antes de cada teste para criar um objeto limpo
+    def setUp(self): 
         self.doacao = Doacao(1, "5kg de Arroz", "5", "2026-03-30", "Não-perecível")
 
     # Teste 1: Verifica se a doação é criada com os dados certos e status inicial
