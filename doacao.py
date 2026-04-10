@@ -24,3 +24,9 @@ class Doacao:
             self.status = "Disponivel"
             return True
         return False
+
+    def alterar_quantidade(self, nova_quantidade):
+        if nova_quantidade > 0:
+            self.quantidade = nova_quantidade
+            return True
+        return False
