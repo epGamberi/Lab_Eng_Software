@@ -3,7 +3,7 @@ from doacao import Doacao
 
 class TestDoacao(unittest.TestCase):
 
-    g# Roda antes de CADA teste
+    # Roda antes de CADA teste
     def setUp(self):
         self.doacao = Doacao(1, "5kg de Arroz", 5, "2026-03-30", "Não-perecível")
 
