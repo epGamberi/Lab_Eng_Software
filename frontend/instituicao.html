@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FoodLink – Feed de Alimentos</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <style>
+    body { background:#f0f7f0; }
+    .navbar { background:#2d6a4f !important; }
+    .navbar-brand { font-weight:700; font-size:1.4rem; color:#fff !important; }
+    .navbar-brand span { color:#95d5b2; }
+    .card-item { border-radius:12px; border-left:4px solid #52b788; transition:.2s; }
+    .card-item:hover { box-shadow:0 4px 16px rgba(0,0,0,.1); }
+    .btn-reservar { background:#2d6a4f; color:#fff; border:none; }
+    .btn-reservar:hover { background:#1b4332; color:#fff; }
+    .badge-cat { background:#d8f3dc; color:#2d6a4f; font-weight:600; }
+    .validade-urgente { color:#e63946; font-weight:600; }
+    .empty-state { text-align:center; padding:60px 0; color:#aaa; }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-dark mb-4">
+  <div class="container">
+    <span class="navbar-brand">Food<span>Link</span></span>
+    <div class="d-flex align-items-center gap-3">
+      <span class="text-white small" id="nomeNav"></span>
+      <a href="index.html" class="btn btn-sm btn-outline-light" onclick="logout()">Sair</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container pb-5">
+  <!-- Barra de busca e filtro -->
+  <div class="card shadow-sm p-3 mb-4">
+    <div class="row g-2 align-items-end">
+      <div class="col-md-8">
+        <label class="form-label small fw-semibold">Buscar por nome</label>
+        <input type="text" class="form-control" id="busca" placeholder="Ex: pão, arroz, maçã..." oninput="filtrarLocal()"/>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label small fw-semibold">Filtrar por categoria</label>
+        <select class="form-select" id="filtroCategoria" onchange="carregarFeed()">
+          <option value="">Todas as categorias</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contagem -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="fw-bold mb-0">🥦 Alimentos Disponíveis</h5>
+    <span class="badge bg-success" id="contagem">0 itens</span>
+  </div>
+
+  <div id="alertaReserva" class="alert d-none" role="alert"></div>
+
+  <!-- Feed de cards -->
+  <div id="feed" class="row g-3">
+    <div class="col-12 empty-state"><p>Carregando...</p></div>
+  </div>
+</div>
+
+<script>
+  const API = "http://localhost:8000";
+  const usuarioId = sessionStorage.getItem("usuario_id");
+  const nome = sessionStorage.getItem("nome");
+
+  if (!usuarioId || sessionStorage.getItem("tipo_perfil") !== "INSTITUICAO") {
+    window.location.href = "index.html";
+  }
+
+  document.getElementById("nomeNav").textContent = nome;
+
+  let todasDoacoes = [];
+
+  async function carregarCategorias() {
+    const res = await fetch(`${API}/categorias`);
+    const cats = await res.json();
+    const sel = document.getElementById("filtroCategoria");
+    cats.forEach(c => {
+      const opt = document.createElement("option");
+      opt.value = c.id_categoria;
+      opt.textContent = c.nome;
+      sel.appendChild(opt);
+    });
+  }
+
+  async function carregarFeed() {
+    const catId = document.getElementById("filtroCategoria").value;
+    let url = `${API}/doacoes`;
+    if (catId) url += `?categoria_id=${catId}`;
+
+    try {
+      const res = await fetch(url);
+      todasDoacoes = await res.json();
+      filtrarLocal();
+    } catch (e) {
+      document.getElementById("feed").innerHTML =
+        '<div class="col-12 empty-state"><p>Erro ao conectar à API.</p></div>';
+    }
+  }
+
+  function filtrarLocal() {
+    const busca = document.getElementById("busca").value.toLowerCase();
+    const filtradas = busca
+      ? todasDoacoes.filter(d => d.titulo.toLowerCase().includes(busca))
+      : todasDoacoes;
+
+    renderizarFeed(filtradas);
+  }
+
+  function renderizarFeed(doacoes) {
+    const feed = document.getElementById("feed");
+    document.getElementById("contagem").textContent = `${doacoes.length} ite${doacoes.length === 1 ? 'm' : 'ns'}`;
+
+    if (doacoes.length === 0) {
+      feed.innerHTML = `
+        <div class="col-12 empty-state">
+          <p style="font-size:3rem">📭</p>
+          <p>Nenhuma doação disponível no momento.</p>
+        </div>`;
+      return;
+    }
+
+    feed.innerHTML = doacoes.map(d => {
+      const hoje = new Date();
+      const venc = new Date(d.data_vencimento + "T00:00:00");
+      const diasRestantes = Math.ceil((venc - hoje) / (1000 * 60 * 60 * 24));
+      const urgente = diasRestantes <= 2;
+
+      return `
+      <div class="col-md-6 col-lg-4">
+        <div class="card card-item shadow-sm h-100">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-1">
+              <h6 class="fw-bold mb-0">${d.titulo}</h6>
+              <span class="badge badge-cat">${d.categoria_nome || "—"}</span>
+            </div>
+            <p class="text-muted small mb-1">
+              🏪 <strong>${d.doador_nome || "Doador"}</strong>
+            </p>
+            <p class="text-muted small mb-1">
+              📍 ${d.doador_endereco || "Endereço não informado"}
+            </p>
+            <p class="small mb-1">
+              📦 ${d.quantidade} ${d.unidade_medida}
+            </p>
+            <p class="small mb-2 ${urgente ? 'validade-urgente' : 'text-muted'}">
+              📅 Validade: ${formatarData(d.data_vencimento)}
+              ${urgente ? ' ⚠️ URGENTE' : ''}
+            </p>
+            <button class="btn btn-reservar w-100 btn-sm" onclick="reservar(${d.id_doacao}, '${d.titulo}')">
+              Reservar este item
+            </button>
+          </div>
+        </div>
+      </div>`;
+    }).join("");
+  }
+
+  async function reservar(doacaoId, titulo) {
+    if (!confirm(`Deseja reservar "${titulo}"? O endereço do doador será exibido após a confirmação.`)) return;
+
+    const res = await fetch(`${API}/doacoes/${doacaoId}/reservar?instituicao_id=${usuarioId}`, {
+      method: "POST",
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      mostrarAlerta(data.detail || "Erro ao reservar.", "danger"); return;
+    }
+
+    mostrarAlerta(
+      `✅ "${titulo}" reservado! Retirada em: ${data.doador_endereco || "Veja o endereço no seu perfil."}`,
+      "success"
+    );
+    carregarFeed();
+  }
+
+  function mostrarAlerta(msg, tipo) {
+    const el = document.getElementById("alertaReserva");
+    el.className = `alert alert-${tipo}`;
+    el.textContent = msg;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    setTimeout(() => el.className = "alert d-none", 6000);
+  }
+
+  function formatarData(d) {
+    if (!d) return "-";
+    const [y,m,dia] = d.split("-");
+    return `${dia}/${m}/${y}`;
+  }
+
+  function logout() { sessionStorage.clear(); }
+
+  carregarCategorias();
+  carregarFeed();
+
+  // Auto-refresh a cada 30s
+  setInterval(carregarFeed, 30000);
+</script>
+</body>
+</html>

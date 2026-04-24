@@ -1,4 +1,4 @@
-name: Esteira CI - Testes Python
+name: FoodLink CI
 
 on:
   push:
@@ -9,15 +9,32 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Configurar Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'
-        
-    - name: Rodar os Testes
-      run: |
-        python -m unittest test_doacao.py
+      - uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalar dependências
+        run: pip install -r backend/requirements.txt
+
+      - name: Verificar sintaxe do backend
+        run: |
+          python -m py_compile backend/main.py
+          python -m py_compile backend/models.py
+          python -m py_compile backend/schemas.py
+          python -m py_compile backend/database.py
+          echo "✅ Sintaxe OK"
+
+      - name: Rodar testes existentes
+        run: python -m unittest test_doacao.py
+
+      - name: Subir API e verificar health check
+        run: |
+          cd backend
+          uvicorn main:app --host 0.0.0.0 --port 8000 &
+          sleep 3
+          curl -f http://localhost:8000/ || exit 1
+          echo "✅ API respondendo"
