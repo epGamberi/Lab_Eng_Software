@@ -1,0 +1,20 @@
+@startuml Arquitetura_FoodLink
+node "Dispositivo Usuário" as Cliente {
+  component "Navegador Web\n(HTML/CSS/JS)" as Browser
+}
+
+node "Nuvem AWS (Instância EC2)" as AWS {
+  node "Servidor de Aplicação" as ServerNode {
+    component "Uvicorn (ASGI Server)" as Uvicorn
+    component "FastAPI (Python App)" as API
+  }
+  
+  node "Camada de Dados" as DataNode {
+    database "SQLite Database" as DB
+  }
+}
+
+Browser -- Uvicorn : "  Chamadas HTTPS / REST  "
+Uvicorn -- API : "  Lógica de Negócio  "
+API -- DB : "  SQLAlchemy (ORM)  "
+@enduml

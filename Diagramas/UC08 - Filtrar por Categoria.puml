@@ -1,0 +1,14 @@
+@startuml UC08_FiltrarCategoria
+actor Instituicao
+boundary "Tela de Feed" as Tela
+control "FeedController" as Control
+database "Banco de Dados" as DB
+
+Instituicao -> Tela : selecionarCategoria(nome)
+Tela -> Control : buscarPorFiltro(nome)
+activate Control
+Control -> DB : SELECT * FROM Doacao WHERE categoria=?
+DB --> Control : Itens Filtrados
+Control --> Tela : Atualizar Feed
+deactivate Control
+@enduml

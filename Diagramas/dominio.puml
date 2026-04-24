@@ -1,22 +1,52 @@
-@startuml Diagrama de Dominio
+@startuml Diagrama de Dominio FoodLink
+
+skinparam class {
+    BackgroundColor White
+    ArrowColor Black
+    BorderColor Black
+}
+
 class Usuario {
-  + id_usuario: integer
+  + id_usuario: integer <<PK>>
   + nome: string
   + email: string
   + senha_hash: string
-  + tipo_perfil: enum (Doador, Instituicao)
-  + endereco: string
+  + tipo_perfil: enum
+  + data_cadastro: datetime
+}
+
+class Endereco {
+  + id_endereco: integer <<PK>>
+  + cep: string
+  + logradouro: string
+  + numero: string
+  + bairro: string
+  + cidade: string
+  + uf: string
+  + usuario_id: integer <<FK>>
 }
 
 class Doacao {
-  + id_doacao: integer
+  + id_doacao: integer <<PK>>
   + titulo: string
-  + quantidade: string
-  + validade: date
-  + categoria: string
-  + status: enum (Disponivel, Reservado, Entregue)
+  + quantidade: float
+  + unidade_medida: string
+  + data_vencimento: date
+  + status: enum
+  + doador_id: integer <<FK>>
+  + categoria_id: integer <<FK>>
+  + instituicao_id: integer <<FK>>
 }
 
+class CategoriaAlimento {
+  + id_categoria: integer <<PK>>
+  + nome: string
+  + descricao: string
+}
+
+Usuario "1" *-- "1" Endereco : possui >
 Usuario "1" -- "0..*" Doacao : anuncia (Doador) >
 Usuario "0..1" -- "0..*" Doacao : reserva (Instituicao) >
+CategoriaAlimento "1" -- "0..*" Doacao : classifica >
+
 @enduml

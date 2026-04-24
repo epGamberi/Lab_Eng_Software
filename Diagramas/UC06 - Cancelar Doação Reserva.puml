@@ -1,0 +1,14 @@
+@startuml UC06_Cancelar
+actor Usuario
+boundary "Painel" as Tela
+control "DoacaoController" as Control
+database "Banco de Dados" as DB
+
+Usuario -> Tela : clicarCancelar(ID)
+Tela -> Control : processarCancelamento(ID)
+activate Control
+Control -> DB : UPDATE Status (Cancelado/Disponivel)
+DB --> Control : Sucesso
+Control --> Tela : Remover/Atualizar Item
+deactivate Control
+@enduml

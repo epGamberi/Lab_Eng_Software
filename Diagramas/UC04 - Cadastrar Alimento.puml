@@ -1,0 +1,14 @@
+@startuml UC04_CadastrarAlimento
+actor Doador
+boundary "Tela de Doação" as Tela
+control "DoacaoController" as Control
+database "Banco de Dados" as DB
+
+Doador -> Tela : preencherFormulario(titulo, qtd, validade)
+Tela -> Control : criarAnuncio(dados, Token)
+activate Control
+Control -> DB : INSERT Doacao (status='Disponivel')
+DB --> Control : ID_Doacao
+Control --> Tela : "Publicado com Sucesso"
+deactivate Control
+@enduml

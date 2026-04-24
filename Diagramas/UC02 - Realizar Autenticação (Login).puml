@@ -1,0 +1,16 @@
+@startuml UC02_Login
+actor Usuario
+boundary "Tela de Login" as Tela
+control "AuthController" as Control
+database "Banco de Dados" as DB
+
+Usuario -> Tela : informarCredenciais(email, senha)
+Tela -> Control : autenticar(email, senha)
+activate Control
+Control -> DB : SELECT Usuario WHERE email=?
+DB --> Control : HashSenha e Perfil
+Control -> Control : Validar Senha
+Control --> Tela : Token JWT e Perfil
+deactivate Control
+Tela --> Usuario : Acessar Painel
+@enduml

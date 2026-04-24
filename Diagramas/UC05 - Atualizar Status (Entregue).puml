@@ -1,0 +1,14 @@
+@startuml UC05_AtualizarStatus
+actor Doador
+boundary "Meus Itens" as Tela
+control "DoacaoController" as Control
+database "Banco de Dados" as DB
+
+Doador -> Tela : clicarConfirmarEntrega(ID)
+Tela -> Control : finalizarDoacao(ID)
+activate Control
+Control -> DB : UPDATE Doacao SET status='Entregue'
+DB --> Control : OK
+Control --> Tela : Atualizar Lista
+deactivate Control
+@enduml

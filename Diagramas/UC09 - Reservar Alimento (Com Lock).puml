@@ -1,0 +1,16 @@
+@startuml UC09_ReservarAlimento
+actor Instituicao
+boundary "Tela de Feed" as Tela
+control "ReservaController" as Control
+database "Banco de Dados" as DB
+
+Instituicao -> Tela : clicarReservar(ID)
+Tela -> Control : realizarReserva(ID, Token)
+activate Control
+Control -> DB : SELECT status FOR UPDATE (Lock)
+DB --> Control : status='Disponivel'
+Control -> DB : UPDATE status='Reservado', inst_id=?
+DB --> Control : Sucesso
+Control --> Tela : Mostrar Endereço do Doador
+deactivate Control
+@enduml

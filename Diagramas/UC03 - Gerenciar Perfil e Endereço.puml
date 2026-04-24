@@ -1,0 +1,14 @@
+@startuml UC03_GerenciarPerfil
+actor Usuario
+boundary "Tela de Perfil" as Tela
+control "UsuarioController" as Control
+database "Banco de Dados" as DB
+
+Usuario -> Tela : alterarDados(novosDados)
+Tela -> Control : atualizar(dados, Token)
+activate Control
+Control -> DB : UPDATE Usuario SET ...
+DB --> Control : OK
+Control --> Tela : Confirmação
+deactivate Control
+@enduml

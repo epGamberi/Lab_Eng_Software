@@ -1,0 +1,14 @@
+@startuml UC07_VisualizarFeed
+actor Instituicao
+boundary "Tela de Feed" as Tela
+control "FeedController" as Control
+database "Banco de Dados" as DB
+
+Instituicao -> Tela : acessarFeed()
+Tela -> Control : listarDisponiveis()
+activate Control
+Control -> DB : SELECT * FROM Doacao WHERE status='Disponivel'
+DB --> Control : Lista de Alimentos
+Control --> Tela : Renderizar Cards
+deactivate Control
+@enduml

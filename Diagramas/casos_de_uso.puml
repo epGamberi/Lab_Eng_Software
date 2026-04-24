@@ -5,7 +5,7 @@ skinparam packageStyle rectangle
 actor Doador
 actor Instituição
 
-package "Sistema de Doação" {
+package "FoodLink" {
   usecase "Cadastrar Usuário" as UC1
   usecase "Realizar Autenticação (Login)" as UC2
   usecase "Gerenciar Perfil e Endereço" as UC3
@@ -17,18 +17,19 @@ package "Sistema de Doação" {
   usecase "Reservar Alimento" as UC9
 }
 
-Doador --> UC1
-Doador --> UC2
-Doador --> UC3
-Doador --> UC4
-Doador --> UC5
-Doador --> UC6
+Doador -- UC1
+Doador -- UC2
+Doador -- UC3
+Doador -- UC4
+Doador -- UC5
+Doador -- UC6
 
-Instituição --> UC1
-Instituição --> UC2
-Instituição --> UC3
-Instituição --> UC6
-Instituição --> UC7
-Instituição --> UC8
-Instituição --> UC9
+Instituição -- UC1
+Instituição -- UC2
+Instituição -- UC3
+Instituição -- UC6
+Instituição -- UC7
+Instituição -- UC9
+
+UC8 .> UC7 : <<extend>>
 @enduml

@@ -1,0 +1,15 @@
+@startuml UC01_CadastrarUsuario
+actor "Novo Usuário" as Ator
+boundary "Tela de Cadastro" as Tela
+control "UsuarioController" as Control
+database "Banco de Dados" as DB
+
+Ator -> Tela : inserirDados(nome, email, senha, endereco)
+Tela -> Control : cadastrar(dados)
+activate Control
+Control -> DB : INSERT Usuario + Endereco
+DB --> Control : Sucesso (ID)
+Control --> Tela : Mensagem de Sucesso
+deactivate Control
+Tela --> Ator : Redirecionar para Login
+@enduml
