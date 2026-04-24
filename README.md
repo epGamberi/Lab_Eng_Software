@@ -174,4 +174,4 @@ Se o terminal mostrar `Application startup complete`, o backend esta pronto.
 
 **Fase 2 (N2) — Em andamento:** Backend (FastAPI + SQLite), Frontend (HTML/JS/Bootstrap), CI/CD (GitHub Actions).
 
-**Fase 3 (N3) — Prevista:** Deploy na AWS EC2, Nginx, SSL/TLS, banco PostgreSQL em producao.
+**Fase 3 (N2) — Prevista:** Deploy na AWS EC2, Nginx, SSL/TLS, banco PostgreSQL em producao.
