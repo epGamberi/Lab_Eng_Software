@@ -1,12 +1,20 @@
+import os
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./foodlink.db"
+# Em producao (Render), usa a variavel de ambiente DATABASE_URL com PostgreSQL
+# Em desenvolvimento local, usa SQLite
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./foodlink.db")
 
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-)
+# Corrige prefixo antigo do Render (postgres:// -> postgresql://)
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
+# SQLite precisa do argumento check_same_thread, PostgreSQL nao
+connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}
+
+engine = create_engine(DATABASE_URL, connect_args=connect_args)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
