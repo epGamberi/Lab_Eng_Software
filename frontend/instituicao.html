@@ -3,62 +3,173 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>FoodLink – Feed de Alimentos</title>
+  <title>FoodLink – Alimentos Disponíveis</title>
+
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+
   <style>
-    body { background:#f0f7f0; }
-    .navbar { background:#2d6a4f !important; }
-    .navbar-brand { font-weight:700; font-size:1.4rem; color:#fff !important; }
-    .navbar-brand span { color:#95d5b2; }
-    .card-item { border-radius:12px; border-left:4px solid #52b788; transition:.2s; }
-    .card-item:hover { box-shadow:0 4px 16px rgba(0,0,0,.1); }
-    .btn-reservar { background:#2d6a4f; color:#fff; border:none; }
-    .btn-reservar:hover { background:#1b4332; color:#fff; }
-    .badge-cat { background:#d8f3dc; color:#2d6a4f; font-weight:600; }
-    .validade-urgente { color:#e63946; font-weight:600; }
-    .empty-state { text-align:center; padding:60px 0; color:#aaa; }
+    body {
+      background: #f6f9f7;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+    }
+
+    .navbar {
+      background: #ffffff;
+      border-bottom: 1px solid #e9ecef;
+    }
+
+    .logo-navbar {
+      height: 42px;
+      object-fit: contain;
+    }
+
+    .user-name {
+      font-size: 0.85rem;
+      color: #6c757d;
+    }
+
+    .btn-logout {
+      border-radius: 8px;
+      font-size: 0.8rem;
+    }
+
+    .card {
+      border: none;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+    }
+
+    .section-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #6c757d;
+      letter-spacing: 0.5px;
+    }
+
+    .form-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .form-control, .form-select {
+      border-radius: 10px;
+      padding: 10px;
+    }
+
+    .form-control:focus, .form-select:focus {
+      border-color: #52b788;
+      box-shadow: 0 0 0 3px rgba(82,183,136,0.2);
+    }
+
+    .card-item {
+      border-radius: 14px;
+      background: #ffffff;
+      padding: 14px;
+      transition: 0.2s;
+    }
+
+    .card-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+    }
+
+    .badge-cat {
+      background: #e9f7ef;
+      color: #2d6a4f;
+      font-weight: 600;
+      font-size: 0.7rem;
+      border-radius: 8px;
+      padding: 4px 8px;
+    }
+
+    .validade-urgente {
+      color: #e63946;
+      font-weight: 600;
+    }
+
+    .btn-reservar {
+      background: linear-gradient(135deg, #2d6a4f, #52b788);
+      border: none;
+      border-radius: 10px;
+      color: #ffffff;
+      font-weight: 600;
+      padding: 8px;
+    }
+
+    .btn-reservar:hover {
+      opacity: 0.95;
+      color: #ffffff;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 0;
+      color: #adb5bd;
+    }
+
+    .alert {
+      border-radius: 10px;
+      font-size: 0.85rem;
+    }
   </style>
 </head>
+
 <body>
-<nav class="navbar navbar-dark mb-4">
-  <div class="container">
-    <span class="navbar-brand">Food<span>Link</span></span>
-    <div class="d-flex align-items-center gap-3">
-      <span class="text-white small" id="nomeNav"></span>
-      <a href="index.html" class="btn btn-sm btn-outline-light" onclick="logout()">Sair</a>
+
+<!-- NAVBAR -->
+<nav class="navbar mb-4">
+  <div class="container d-flex justify-content-between align-items-center">
+
+    <div class="d-flex align-items-center">
+      <img src="logo.png" class="logo-navbar">
     </div>
+
+    <div class="d-flex align-items-center gap-3">
+      <span class="user-name" id="nomeNav"></span>
+      <a href="index.html" class="btn btn-outline-secondary btn-sm btn-logout" onclick="logout()">Sair</a>
+    </div>
+
   </div>
 </nav>
 
 <div class="container pb-5">
-  <!-- Barra de busca e filtro -->
-  <div class="card shadow-sm p-3 mb-4">
+
+  <!-- FILTROS -->
+  <div class="card p-3 mb-4">
     <div class="row g-2 align-items-end">
+
       <div class="col-md-8">
-        <label class="form-label small fw-semibold">Buscar por nome</label>
-        <input type="text" class="form-control" id="busca" placeholder="Ex: pão, arroz, maçã..." oninput="filtrarLocal()"/>
+        <label class="form-label">Buscar alimento</label>
+        <input type="text" class="form-control" id="busca" placeholder="Ex: pão, arroz..." oninput="filtrarLocal()"/>
       </div>
+
       <div class="col-md-4">
-        <label class="form-label small fw-semibold">Filtrar por categoria</label>
+        <label class="form-label">Categoria</label>
         <select class="form-select" id="filtroCategoria" onchange="carregarFeed()">
-          <option value="">Todas as categorias</option>
+          <option value="">Todas</option>
         </select>
       </div>
+
     </div>
   </div>
 
-  <!-- Contagem -->
+  <!-- HEADER -->
   <div class="d-flex justify-content-between align-items-center mb-3">
-    <h5 class="fw-bold mb-0">🥦 Alimentos Disponíveis</h5>
-    <span class="badge bg-success" id="contagem">0 itens</span>
+    <div>
+      <div class="section-title">ALIMENTOS DISPONÍVEIS</div>
+    </div>
+    <span class="badge bg-success" id="contagem">0</span>
   </div>
 
-  <div id="alertaReserva" class="alert d-none" role="alert"></div>
+  <div id="alertaReserva" class="alert d-none"></div>
 
-  <!-- Feed de cards -->
+  <!-- FEED -->
   <div id="feed" class="row g-3">
-    <div class="col-12 empty-state"><p>Carregando...</p></div>
+    <div class="col-12 empty-state">
+      <p>Carregando...</p>
+    </div>
   </div>
+
 </div>
 
 <script>
@@ -78,6 +189,7 @@
     const res = await fetch(`${API}/categorias`);
     const cats = await res.json();
     const sel = document.getElementById("filtroCategoria");
+
     cats.forEach(c => {
       const opt = document.createElement("option");
       opt.value = c.id_categoria;
@@ -97,12 +209,13 @@
       filtrarLocal();
     } catch (e) {
       document.getElementById("feed").innerHTML =
-        '<div class="col-12 empty-state"><p>Erro ao conectar à API.</p></div>';
+        '<div class="col-12 empty-state"><p>Erro ao carregar dados.</p></div>';
     }
   }
 
   function filtrarLocal() {
     const busca = document.getElementById("busca").value.toLowerCase();
+
     const filtradas = busca
       ? todasDoacoes.filter(d => d.titulo.toLowerCase().includes(busca))
       : todasDoacoes;
@@ -112,12 +225,12 @@
 
   function renderizarFeed(doacoes) {
     const feed = document.getElementById("feed");
-    document.getElementById("contagem").textContent = `${doacoes.length} ite${doacoes.length === 1 ? 'm' : 'ns'}`;
+
+    document.getElementById("contagem").textContent = doacoes.length;
 
     if (doacoes.length === 0) {
       feed.innerHTML = `
         <div class="col-12 empty-state">
-          <p style="font-size:3rem">📭</p>
           <p>Nenhuma doação disponível no momento.</p>
         </div>`;
       return;
@@ -126,55 +239,60 @@
     feed.innerHTML = doacoes.map(d => {
       const hoje = new Date();
       const venc = new Date(d.data_vencimento + "T00:00:00");
-      const diasRestantes = Math.ceil((venc - hoje) / (1000 * 60 * 60 * 24));
-      const urgente = diasRestantes <= 2;
+      const dias = Math.ceil((venc - hoje) / (1000 * 60 * 60 * 24));
+      const urgente = dias <= 2;
 
       return `
       <div class="col-md-6 col-lg-4">
-        <div class="card card-item shadow-sm h-100">
-          <div class="card-body">
-            <div class="d-flex justify-content-between align-items-start mb-1">
-              <h6 class="fw-bold mb-0">${d.titulo}</h6>
-              <span class="badge badge-cat">${d.categoria_nome || "—"}</span>
-            </div>
-            <p class="text-muted small mb-1">
-              🏪 <strong>${d.doador_nome || "Doador"}</strong>
-            </p>
-            <p class="text-muted small mb-1">
-              📍 ${d.doador_endereco || "Endereço não informado"}
-            </p>
-            <p class="small mb-1">
-              📦 ${d.quantidade} ${d.unidade_medida}
-            </p>
-            <p class="small mb-2 ${urgente ? 'validade-urgente' : 'text-muted'}">
-              📅 Validade: ${formatarData(d.data_vencimento)}
-              ${urgente ? ' ⚠️ URGENTE' : ''}
-            </p>
-            <button class="btn btn-reservar w-100 btn-sm" onclick="reservar(${d.id_doacao}, '${d.titulo}')">
-              Reservar este item
-            </button>
+        <div class="card-item h-100">
+
+          <div class="d-flex justify-content-between mb-1">
+            <strong>${d.titulo}</strong>
+            <span class="badge-cat">${d.categoria_nome || "-"}</span>
           </div>
+
+          <div class="text-muted small mb-1">
+            ${d.doador_nome || "Doador"}
+          </div>
+
+          <div class="text-muted small mb-1">
+            ${d.doador_endereco || "Endereço não informado"}
+          </div>
+
+          <div class="small mb-1">
+            ${d.quantidade} ${d.unidade_medida}
+          </div>
+
+          <div class="small mb-2 ${urgente ? 'validade-urgente' : 'text-muted'}">
+            Validade: ${formatarData(d.data_vencimento)}
+            ${urgente ? ' • urgente' : ''}
+          </div>
+
+          <button class="btn btn-reservar w-100 btn-sm"
+            onclick="reservar(${d.id_doacao}, '${d.titulo}')">
+            Reservar
+          </button>
+
         </div>
       </div>`;
     }).join("");
   }
 
   async function reservar(doacaoId, titulo) {
-    if (!confirm(`Deseja reservar "${titulo}"? O endereço do doador será exibido após a confirmação.`)) return;
+    if (!confirm(`Deseja reservar "${titulo}"?`)) return;
 
     const res = await fetch(`${API}/doacoes/${doacaoId}/reservar?instituicao_id=${usuarioId}`, {
       method: "POST",
     });
+
     const data = await res.json();
 
     if (!res.ok) {
-      mostrarAlerta(data.detail || "Erro ao reservar.", "danger"); return;
+      mostrarAlerta(data.detail || "Erro ao reservar.", "danger");
+      return;
     }
 
-    mostrarAlerta(
-      `✅ "${titulo}" reservado! Retirada em: ${data.doador_endereco || "Veja o endereço no seu perfil."}`,
-      "success"
-    );
+    mostrarAlerta(`"${titulo}" reservado com sucesso.`, "success");
     carregarFeed();
   }
 
@@ -183,7 +301,7 @@
     el.className = `alert alert-${tipo}`;
     el.textContent = msg;
     window.scrollTo({ top: 0, behavior: "smooth" });
-    setTimeout(() => el.className = "alert d-none", 6000);
+    setTimeout(() => el.className = "alert d-none", 5000);
   }
 
   function formatarData(d) {
@@ -192,13 +310,15 @@
     return `${dia}/${m}/${y}`;
   }
 
-  function logout() { sessionStorage.clear(); }
+  function logout() {
+    sessionStorage.clear();
+  }
 
   carregarCategorias();
   carregarFeed();
 
-  // Auto-refresh a cada 30s
   setInterval(carregarFeed, 30000);
 </script>
+
 </body>
 </html>
