@@ -23,13 +23,15 @@ Projeto desenvolvido para a disciplina de **Laboratório de Engenharia de Softwa
 
 ---
 
-## Sobre o Projeto
+## Sobre o Projeto e Documentação
 
 O **FoodLink** é uma plataforma digital web com forte caráter extensionista. O cenário atual brasileiro apresenta um paradoxo crítico: altos índices de desperdício de alimentos viáveis para consumo por parte do setor de comércio, em contraste com a insegurança alimentar enfrentada por parcelas vulneráveis da população.
 
 A solução atua como uma ponte tecnológica, estabelecendo uma rede de comunicação eficiente e rastreável entre quem deseja doar (pessoas físicas, padarias, mercados) e quem precisa receber (ONGs, abrigos e instituições sociais).
 
 O ciclo de vida de uma doação segue os estados: `DISPONIVEL → RESERVADO → ENTREGUE` (ou `CANCELADO`).
+
+> 📄 **Documentação do Projeto:** A documentação completa (UML, Casos de Uso, Requisitos e Casos de Teste) está anexada nas entregas oficiais da disciplina (arquivos `.pdf`).
 
 ---
 
@@ -56,8 +58,8 @@ O ciclo de vida de uma doação segue os estados: `DISPONIVEL → RESERVADO → 
 ### API Externa — ViaCEP
 Na tela de cadastro, ao digitar o CEP, o sistema consulta automaticamente a API pública **ViaCEP** para preencher logradouro, bairro, cidade e UF, sem que o usuário precise digitar manualmente.
 
-```
-GET https://viacep.com.br/ws/{cep}/json/
+```text
+GET [https://viacep.com.br/ws/](https://viacep.com.br/ws/){cep}/json/
 ```
 
 ### API Própria — FoodLink REST API
@@ -82,7 +84,7 @@ O backend expõe uma API REST completa consumida pelo frontend via `fetch()`:
 
 O projeto adota a arquitetura **Client-Server**, separando a interface do usuário da API de negócios.
 
-```
+```text
 Browser (HTML/CSS/JS) — Vercel
         |
         | HTTP/REST (JSON)
@@ -108,7 +110,7 @@ FastAPI + Uvicorn (Python 3.11) — Render
 | ORM | SQLAlchemy 2.0 |
 | Validação | Pydantic 2.10 |
 | Autenticação | Token SHA-256 |
-| CI/CD | GitHub Actions |
+| CI/CD & Testes | GitHub Actions, Unittest |
 | Hospedagem Frontend | Vercel |
 | Hospedagem Backend | Render |
 | API Externa | ViaCEP |
@@ -117,7 +119,7 @@ FastAPI + Uvicorn (Python 3.11) — Render
 
 ## Estrutura do Repositório
 
-```
+```text
 Lab_Eng_Software/
 ├── .github/
 │   └── workflows/
@@ -134,13 +136,15 @@ Lab_Eng_Software/
 │   ├── cadastro.html       — Cadastro de novo usuário (+ integração ViaCEP)
 │   ├── doador.html         — Dashboard do Doador
 │   └── instituicao.html    — Feed da Instituição
+├── tests/
+│   └── test_doacao.py      — Códigos de testes automatizados (unittest)
 ├── Diagramas/              — Diagramas UML (Casos de Uso, Domínio, Sequência)
 └── TG1.pdf                 — Documento de Especificação e Modelagem
 ```
 
 ---
 
-## Como Rodar Localmente
+## Manual de Instalação e Execução Local
 
 ### Pré-requisitos
 
@@ -153,7 +157,7 @@ Lab_Eng_Software/
 
 **1. Clone o repositório**
 ```bash
-git clone https://github.com/epGamberi/Lab_Eng_Software.git
+git clone [https://github.com/epGamberi/Lab_Eng_Software.git](https://github.com/epGamberi/Lab_Eng_Software.git)
 cd Lab_Eng_Software
 ```
 
@@ -178,6 +182,25 @@ No VSCode, clique com o botão direito em `frontend/index.html` e selecione **Op
 
 ---
 
+## Manual de Utilização
+
+O **FoodLink** foi projetado para ser intuitivo. Siga os passos abaixo para utilizar o sistema em produção:
+
+1. **Acesso:** Acesse a plataforma pelo link de produção do Frontend (Vercel) disponível no topo deste documento.
+2. **Cadastro:** Na tela inicial, clique em "Cadastrar". Preencha seus dados, informe o seu CEP (o endereço será preenchido automaticamente) e escolha o seu perfil: **Doador** ou **Instituição**.
+3. **Se você for Doador:**
+   - Faça login na plataforma.
+   - Utilize o formulário no seu painel para registrar os alimentos que deseja doar (informando nome, quantidade, validade e categoria).
+   - Acompanhe o status do item na lista abaixo. Quando uma instituição reservar seu item, o status mudará para "Reservado".
+   - Após entregar o alimento fisicamente, clique em "Confirmar Entrega" no sistema.
+4. **Se você for Instituição:**
+   - Faça login na plataforma.
+   - Você terá acesso ao feed em tempo real com todas as doações disponíveis na rede.
+   - Utilize os filtros por categoria ou a barra de busca para encontrar itens específicos.
+   - Ao encontrar um alimento de interesse, clique em "Reservar". O item sairá do feed público e ficará reservado exclusivamente para você buscar.
+
+---
+
 ## Status do Projeto
 
 **TG1 — Concluída:** Definição do produto, Engenharia de Requisitos, Wireframes e Modelagem UML.
@@ -185,3 +208,5 @@ No VSCode, clique com o botão direito em `frontend/index.html` e selecione **Op
 **TG2 — Concluída:** Estrutura do backend, modelos, testes unitários e CI/CD com GitHub Actions.
 
 **TG3 — Concluída:** Implementação completa do frontend e backend, integração com PostgreSQL, deploy em produção (Vercel + Render), consumo de API externa (ViaCEP).
+
+**TG4 — Concluída:** Implementação de testes automatizados (`unittest`), automação da esteira de testes no GitHub Actions e documentação de casos de testes.
